@@ -20,7 +20,7 @@ contract TestNFT is KIP17Full, KIP17Burnable, Ownable{
 
     bool public onlyWhitelisted = false;
     mapping(address=>bool) private WhitelistAddress;    // 화이트리스트 지갑 주소
-    mapping(address=>uint256) public addressMintedBalance;  // 지갑별 민팅한 갯수
+    mapping(address=>uint256) public addressMintedBalance;  // 지갑별 민팅한 개수
     mapping(address=>uint) public addressTimedlay;  // 지갑별 트랜잭션 딜레이
 
     event Klaytn17Burn(address _to, uint256 tokenId);
@@ -49,9 +49,9 @@ contract TestNFT is KIP17Full, KIP17Burnable, Ownable{
         uint256 supply = totalSupply();
         // 민팅갯수가 0보다 많은지
         require(_mintAmount > 0, "need to mint at least 1");
-        // 민팅갯수가 최대민팅갯수를 넘는지
+        // 민팅갯수가 최대 민팅개수를 넘는지
         require(_mintAmount <= maxMintAmount, "max mint amount per session exceeded");
-        // 현재까지 발행량 + 민팅갯수가 최대 발행량을 넘는지
+        // 현재까지 발행량 + 민팅개수가 최대 발행량을 넘는지
         require(supply + _mintAmount <= maxSupply, "max NFT limit exceeded");
 
         if(msg.sender != owner()){
@@ -61,7 +61,7 @@ contract TestNFT is KIP17Full, KIP17Burnable, Ownable{
                 require(WhitelistAddress[msg.sender],"user is not Whitelist");
                 // 주소별 민팅 갯수를 저장
                 uint256 ownerMintedCount = addressMintedBalance[msg.sender];
-                // 민팅한 갯수 + 민팅하려는 갯수 <= 지갑별 민팅 제한갯수
+                // 민팅한 갯수 + 민팅하려는 수 <= 지갑별 민팅 제한개수
                 require(ownerMintedCount + _mintAmount <= nftPerAddressLimit, "max NFT per address exceeded");
             }
             // 호출자의 자산(Klay)이 민팅 비용보다 많은지
@@ -131,12 +131,12 @@ contract TestNFT is KIP17Full, KIP17Burnable, Ownable{
         cost = _newCost;
     }
 
-    // 최대 민팅 갯수
+    // 최대 민팅 개수
     function setmaxMintAmount(uint256 _newmaxMintAmount) public onlyOwner() {
         maxMintAmount = _newmaxMintAmount;
     }
 
-    // 화이트리스트 최대 민팅 갯수
+    // 화이트리스트 최대 민팅 개수
     function setWhitelistLimit(uint256 _newLimit) public onlyOwner {
         nftPerAddressLimit = _newLimit;
     }
