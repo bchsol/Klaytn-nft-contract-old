@@ -65,7 +65,7 @@ contract SaleForNFTContract {
         }
     }
 
-    // 판매중인 NFT 갯수
+    // 판매중인 NFT 수
     function getOnSaleTokenArrayLength() view public returns (uint256) {
         return onSaleTokenArray.length;
     }
